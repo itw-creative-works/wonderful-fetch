@@ -102,49 +102,51 @@
           nodeFetch(url, config)
             .then(function (res) {
 
-              res.text()
-              .then(function (text) {
-                if (res.ok) {
-                  if (options.raw) {
-                    return _resolve(res);
-                  } else if (options.json) {
-                    JSON5 = JSON5 || require('json5');
-                    try {
-                      return _resolve(JSON5.parse(text));
-                    } catch (e) {
-                      throw new Error(new Error('Response is not JSON: ' + e))
-                    }
-                  } else if (options.download) {
-                    jetpack = jetpack || require('fs-jetpack');
-                    if (!jetpack.exists(options.download)) {
-                      path = path || require('path');
-                      var name = path.parse(options.download).name;
-                      var ext = path.parse(options.download).ext;
-                      var dir = options.download.replace(name + ext, '');
-                      jetpack.dir(dir)
-                    }
-                    fileStream = jetpack.createWriteStream(options.download);
-                    res.body.pipe(fileStream);
-                    res.body.on('error', function (e) {
-                      throw new Error(new Error('Failed to download: ' + e))
-                    });
-                    fileStream.on('finish', function() {
-                      return _resolve({
-                        path: options.download
-                      });
-                    });
-                  } else {
-                    return _resolve(text);
-                  }
-                } else {
-                  var error = new Error(text || res.statusText || 'Unknown error');
-                  Object.assign(error, { status: res.status })
-                  throw error;
+              if (options.ok && options.download) {
+                jetpack = jetpack || require('fs-jetpack');
+                if (!jetpack.exists(options.download)) {
+                  path = path || require('path');
+                  var name = path.parse(options.download).name;
+                  var ext = path.parse(options.download).ext;
+                  var dir = options.download.replace(name + ext, '');
+                  jetpack.dir(dir)
                 }
-              })
-              .catch(e => {
-                return _reject(e);
-              })
+                fileStream = jetpack.createWriteStream(options.download);
+                res.body.pipe(fileStream);
+                res.body.on('error', function (e) {
+                  throw new Error(new Error('Failed to download: ' + e))
+                });
+                fileStream.on('finish', function() {
+                  return _resolve({
+                    path: options.download
+                  });
+                });
+              } else {
+                res.text()
+                .then(function (text) {
+                  if (res.ok) {
+                    if (options.raw) {
+                      return _resolve(res);
+                    } else if (options.json) {
+                      JSON5 = JSON5 || require('json5');
+                      try {
+                        return _resolve(JSON5.parse(text));
+                      } catch (e) {
+                        throw new Error(new Error('Response is not JSON: ' + e))
+                      }
+                    } else {
+                      return _resolve(text);
+                    }
+                  } else {
+                    var error = new Error(text || res.statusText || 'Unknown error');
+                    Object.assign(error, { status: res.status })
+                    throw error;
+                  }
+                })
+                .catch(e => {
+                  return _reject(e);
+                })
+              }
             })
             .catch(function (e) {
               return _reject(e)
