@@ -27,7 +27,7 @@
       var nodeFetch;
 
       options = options || {};
-      options.timeout = options.timeout || 30000;
+      options.timeout = options.timeout || 60000;
       options.tries = typeof options.tries === 'undefined' ? 1 : options.tries;
       options.log = typeof options.log === 'undefined' ? false : options.log;
       options.cacheBreaker = typeof options.cacheBreaker === 'undefined' ? true : options.cacheBreaker;
