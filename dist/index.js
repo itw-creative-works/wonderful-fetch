@@ -20,14 +20,14 @@
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
   // var isRemoteURL = /^https?:\/\/|^\/\//i;
   var SOURCE = 'library';
-  var VERSION = '0.0.1';
+  var VERSION = '0.0.2';
 
   function WonderfulFetch(url, options) {
     return new Promise(function(resolve, reject) {
       var nodeFetch;
 
       options = options || {};
-      options.timeout = options.timeout || 30000;
+      options.timeout = options.timeout || 60000;
       options.tries = typeof options.tries === 'undefined' ? 1 : options.tries;
       options.log = typeof options.log === 'undefined' ? false : options.log;
       options.cacheBreaker = typeof options.cacheBreaker === 'undefined' ? true : options.cacheBreaker;
