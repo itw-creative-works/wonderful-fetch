@@ -1,0 +1,35 @@
+{
+  "name": "wonderful-fetch",
+  "version": "0.0.1",
+  "description": "A wrapper around fetch.",
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "node ./src/prepare.js && node ./test/test.js",
+    "prepare": "node ./src/prepare.js"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itw-creative-works/wonderful-fetch"
+  },
+  "keywords": [
+    "rest api"
+  ],
+  "author": "ITW Creative Works",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/itw-creative-works/wonderful-fetch/issues"
+  },
+  "homepage": "https://itwcreativeworks.come",
+  "dependencies": {
+    "fs-jetpack": "^4.3.1",
+    "json5": "^2.2.1",
+    "node-fetch": "^2.6.1"
+  },
+  "runkitExampleFilename": "examples/process.js"
+}
