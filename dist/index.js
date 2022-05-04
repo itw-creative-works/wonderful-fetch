@@ -20,7 +20,7 @@
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
   // var isRemoteURL = /^https?:\/\/|^\/\//i;
   var SOURCE = 'library';
-  var VERSION = '0.0.3';
+  var VERSION = '0.0.4';
 
   function WonderfulFetch(url, options) {
     return new Promise(function(resolve, reject) {
@@ -122,30 +122,35 @@
                   });
                 });
               } else {
-                res.text()
-                .then(function (text) {
-                  if (res.ok) {
-                    if (options.raw) {
-                      return _resolve(res);
-                    } else if (options.json) {
-                      JSON5 = JSON5 || require('json5');
-                      try {
-                        return _resolve(JSON5.parse(text));
-                      } catch (e) {
-                        throw new Error(new Error('Response is not JSON: ' + e))
-                      }
-                    } else {
-                      return _resolve(text);
-                    }
+                if (res.ok) {
+                  if (options.raw) {
+                    return _resolve(res);
                   } else {
-                    var error = new Error(text || res.statusText || 'Unknown error');
-                    Object.assign(error, { status: res.status })
-                    throw error;
+                    res.text()
+                    .then(function (text) {
+                      if (options.json) {
+                        JSON5 = JSON5 || require('json5');
+                        try {
+                          return _resolve(JSON5.parse(text));
+                        } catch (e) {
+                          throw new Error(new Error('Response is not JSON: ' + e))
+                        }
+                      } else {
+                        return _resolve(text);
+                      }
+                    })
                   }
-                })
-                .catch(e => {
-                  return _reject(e);
-                })
+                } else {
+                  res.text()
+                    .then(function (text) {
+                      var error = new Error(text || res.statusText || 'Unknown error');
+                      Object.assign(error, { status: res.status })
+                      throw error;
+                    })
+                    .catch(e => {
+                      return _reject(e);
+                    })
+                }
               }
             })
             .catch(function (e) {
