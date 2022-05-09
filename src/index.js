@@ -35,7 +35,7 @@
 
       var tries = 1;
       var maxTries = options.tries - 1;
-      // console.log('----maxTries', maxTries, url);
+      var infinite = options.tries === 0;
 
       if (!url) {
         return reject(new Error('No URL provided.'))
@@ -79,7 +79,7 @@
 
           function _reject(e) {
             clearTimeout(timeoutHolder);
-            if (tries > maxTries && maxTries > 0) {
+            if (tries > maxTries && !infinite) {
               return reject(e);
             } else {
               return _fetch(tries++);
