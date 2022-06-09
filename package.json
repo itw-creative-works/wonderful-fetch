@@ -1,11 +1,11 @@
 {
   "name": "wonderful-fetch",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A wrapper around fetch.",
   "main": "./dist/index.js",
   "scripts": {
-    "test": "node ./src/prepare.js && node ./test/test.js",
-    "prepare": "node ./src/prepare.js"
+    "test": "npm run prepare && node ./test/test.js",
+    "prepare": "node -e 'require(`prepare-package`)'"
   },
   "engines": {
     "node": ">=6.0.0"
@@ -31,5 +31,8 @@
     "json5": "^2.2.1",
     "node-fetch": "^2.6.1"
   },
-  "runkitExampleFilename": "examples/process.js"
+  "runkitExampleFilename": "examples/process.js",
+  "devDependencies": {
+    "prepare-package": "^0.0.6"
+  }
 }
