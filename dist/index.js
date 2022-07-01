@@ -20,7 +20,7 @@
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
   // var isRemoteURL = /^https?:\/\/|^\/\//i;
   var SOURCE = 'library';
-  var VERSION = '0.0.6';
+  var VERSION = '0.0.7';
 
   function WonderfulFetch(url, options) {
     return new Promise(function(resolve, reject) {
@@ -31,11 +31,26 @@
       options.tries = typeof options.tries === 'undefined' ? 1 : options.tries;
       options.log = typeof options.log === 'undefined' ? false : options.log;
       options.cacheBreaker = typeof options.cacheBreaker === 'undefined' ? true : options.cacheBreaker;
+      options.contentType = typeof options.contentType === 'undefined' ? '' : options.contentType;
+      options.responseFormat = typeof options.responseFormat === 'undefined' ? 'raw' : options.responseFormat;
+
+      // Legacy
+      if (options.raw) {
+        options.responseFormat = 'raw'
+      } else if (options.json) {
+        options.responseFormat = 'json'
+      } else if (options.text) {
+        options.responseFormat = 'text'
+      }
+
       url = url || options.url;
 
       var tries = 1;
       var maxTries = options.tries - 1;
       var infinite = options.tries === 0;
+
+      var bodyIsFormData = typeof options.body === 'function' && options.body.append;
+      var bodyIsObject = typeof options.body === 'object';
 
       if (!url) {
         return reject(new Error('No URL provided.'))
@@ -48,10 +63,31 @@
       }
 
       if (options.body) {
-        config.body = typeof options.body !== 'string' ? JSON.stringify(options.body) : options.body;
+        if (bodyIsFormData) {
+          config.body = options.body;
+        } else if (bodyIsObject) {
+          config.body = JSON.stringify(options.body);
+        } else {
+          config.body = options.body;
+        }
       }
-      if (options.json && options.body && config.method === 'post') {
+
+      // if (options.json && options.body && config.method === 'post') {
+      //   config.headers['Content-Type'] = 'application/json';
+      // }
+      if (
+        (bodyIsObject && !bodyIsFormData)
+        || (options.contentType === 'json')
+      ) {
         config.headers['Content-Type'] = 'application/json';
+      }
+
+      if (config.method === 'get') {
+        delete config.body;
+      }
+
+      if (options.log) {
+        console.log('Fetch configuration:', 'bodyIsFormData=' + bodyIsFormData, 'bodyIsObject=' + bodyIsObject, options, config);
       }
 
       var timeoutHolder;
@@ -69,7 +105,7 @@
 
         setTimeout(function () {
           if (options.log) {
-            console.log('Fetch (' + tries + '/' + options.tries + ', ' + ms + 'ms): ' + url, options);
+            console.log('Fetch (' + tries + '/' + options.tries + ', ' + ms + 'ms): ', url);
           }
 
           function _resolve(r) {
@@ -123,12 +159,12 @@
                 });
               } else {
                 if (res.ok) {
-                  if (options.raw) {
+                  if (options.responseFormat === 'raw') {
                     return _resolve(res);
                   } else {
                     res.text()
                     .then(function (text) {
-                      if (options.json) {
+                      if (options.responseFormat === 'json') {
                         JSON5 = JSON5 || require('json5');
                         try {
                           return _resolve(JSON5.parse(text));
@@ -138,6 +174,9 @@
                       } else {
                         return _resolve(text);
                       }
+                    })
+                    .catch(e => {
+                      return _reject(e);
                     })
                   }
                 } else {
