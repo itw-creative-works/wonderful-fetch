@@ -78,7 +78,7 @@ The options for `wonderfulFetch(url, options)` are as follows.
   * Default: `null`
 * options `object`: Advanced options
   * method `string`: The type of request
-    * Acceptable Values: `get`, `post`, `delete`, `patch`
+    * Acceptable Values: `get`, `post`, `delete`, `put`, `patch`
     * Default: `get`
   * json `boolean`: Will parse the response as JSON
     * Acceptable Values: `true`, `false`
