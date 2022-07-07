@@ -80,7 +80,7 @@ The options for `wonderfulFetch(url, options)` are as follows.
   * method `string`: The type of request
     * Acceptable Values: `get`, `post`, `delete`, `put`, `patch`
     * Default: `get`
-  * responseFormat `string`: Format of the response 
+  * response `string`: Automatically format the response
     * Acceptable Values: `raw`, `json`, `text`
     * Default: `raw`       
   * timeout `number`: The request will automatically timeout after this

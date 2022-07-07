@@ -1,6 +1,6 @@
 {
   "name": "wonderful-fetch",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "A wrapper around fetch.",
   "main": "./dist/index.js",
   "scripts": {
@@ -33,6 +33,6 @@
   },
   "runkitExampleFilename": "examples/process.js",
   "devDependencies": {
-    "prepare-package": "^0.0.6"
+    "prepare-package": "^0.0.9"
   }
 }

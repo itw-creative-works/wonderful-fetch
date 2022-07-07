@@ -32,15 +32,15 @@
       options.log = typeof options.log === 'undefined' ? false : options.log;
       options.cacheBreaker = typeof options.cacheBreaker === 'undefined' ? true : options.cacheBreaker;
       options.contentType = (typeof options.contentType === 'undefined' ? '' : options.contentType).toLowerCase();
-      options.responseFormat = (typeof options.responseFormat === 'undefined' ? 'raw' : options.responseFormat).toLowerCase();
+      options.response = (typeof options.response === 'undefined' ? 'raw' : options.response).toLowerCase();
 
       // Legacy
       if (options.raw) {
-        options.responseFormat = 'raw'
+        options.response = 'raw'
       } else if (options.json) {
-        options.responseFormat = 'json'
+        options.response = 'json'
       } else if (options.text) {
-        options.responseFormat = 'text'
+        options.response = 'text'
       }
 
       url = url || options.url;
@@ -138,7 +138,7 @@
           nodeFetch(url, config)
             .then(function (res) {
 
-              if (options.ok && options.download) {
+              if (res.ok && options.download) {
                 jetpack = jetpack || require('fs-jetpack');
                 if (!jetpack.exists(options.download)) {
                   path = path || require('path');
@@ -159,12 +159,12 @@
                 });
               } else {
                 if (res.ok) {
-                  if (options.responseFormat === 'raw') {
+                  if (options.response === 'raw') {
                     return _resolve(res);
                   } else {
                     res.text()
                     .then(function (text) {
-                      if (options.responseFormat === 'json') {
+                      if (options.response === 'json') {
                         JSON5 = JSON5 || require('json5');
                         try {
                           return _resolve(JSON5.parse(text));
