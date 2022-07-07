@@ -31,8 +31,8 @@
       options.tries = typeof options.tries === 'undefined' ? 1 : options.tries;
       options.log = typeof options.log === 'undefined' ? false : options.log;
       options.cacheBreaker = typeof options.cacheBreaker === 'undefined' ? true : options.cacheBreaker;
-      options.contentType = typeof options.contentType === 'undefined' ? '' : options.contentType;
-      options.responseFormat = typeof options.responseFormat === 'undefined' ? 'raw' : options.responseFormat;
+      options.contentType = (typeof options.contentType === 'undefined' ? '' : options.contentType).toLowerCase();
+      options.responseFormat = (typeof options.responseFormat === 'undefined' ? 'raw' : options.responseFormat).toLowerCase();
 
       // Legacy
       if (options.raw) {
