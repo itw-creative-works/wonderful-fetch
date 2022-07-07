@@ -25,7 +25,7 @@
   "bugs": {
     "url": "https://github.com/itw-creative-works/wonderful-fetch/issues"
   },
-  "homepage": "https://itwcreativeworks.come",
+  "homepage": "https://itwcreativeworks.com",
   "dependencies": {
     "fs-jetpack": "^4.3.1",
     "json5": "^2.2.1",
