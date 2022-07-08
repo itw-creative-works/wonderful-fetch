@@ -20,7 +20,7 @@
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
   // var isRemoteURL = /^https?:\/\/|^\/\//i;
   var SOURCE = 'library';
-  var VERSION = '0.0.11';
+  var VERSION = '0.0.12';
 
   function WonderfulFetch(url, options) {
     return new Promise(function(resolve, reject) {
@@ -49,8 +49,8 @@
       var maxTries = options.tries - 1;
       var infinite = options.tries === 0;
 
-      var bodyIsFormData = typeof options.body === 'function' && options.body.append;
-      var bodyIsObject = typeof options.body === 'object';
+      var bodyIsObject = options.body && typeof options.body === 'object';
+      var bodyIsFormData = bodyIsObject && typeof options.body.append === 'function';
 
       if (!url) {
         return reject(new Error('No URL provided.'))

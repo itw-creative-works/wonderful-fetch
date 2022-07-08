@@ -49,8 +49,8 @@
       var maxTries = options.tries - 1;
       var infinite = options.tries === 0;
 
-      var bodyIsFormData = typeof options.body === 'function' && options.body.append;
-      var bodyIsObject = typeof options.body === 'object';
+      var bodyIsObject = options.body && typeof options.body === 'object';
+      var bodyIsFormData = bodyIsObject && typeof options.body.append === 'function';
 
       if (!url) {
         return reject(new Error('No URL provided.'))
