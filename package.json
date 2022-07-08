@@ -33,6 +33,6 @@
   },
   "runkitExampleFilename": "examples/process.js",
   "devDependencies": {
-    "prepare-package": "^0.0.11"
+    "prepare-package": "^0.0.12"
   }
 }
