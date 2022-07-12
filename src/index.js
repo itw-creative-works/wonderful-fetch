@@ -14,7 +14,7 @@
   }
 }(typeof self !== 'undefined' ? self : this, function () {
 
-  var JSON5;
+  var JSONParser;
   var jetpack;
 
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
@@ -164,9 +164,15 @@
                     res.text()
                     .then(function (text) {
                       if (options.response === 'json') {
-                        JSON5 = JSON5 || require('json5');
+
+                        if (environment === 'node') {
+                          JSONParser = JSONParser || require('json5');
+                        } else {
+                          JSONParser = typeof JSON5 === 'undefined' ? JSON : JSON5;
+                        }
+
                         try {
-                          return _resolve(JSON5.parse(text));
+                          return _resolve(JSONParser.parse(text));
                         } catch (e) {
                           throw new Error(new Error('Response is not JSON: ' + e))
                         }
