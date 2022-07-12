@@ -56,7 +56,6 @@
         return reject(new Error('No URL provided.'))
       }
 
-      var fileStream;
       var config = {
         method: (options.method || 'get').toLowerCase(),
         headers: options.headers || {},
@@ -147,7 +146,7 @@
                   var dir = options.download.replace(name + ext, '');
                   jetpack.dir(dir)
                 }
-                fileStream = jetpack.createWriteStream(options.download);
+                var fileStream = jetpack.createWriteStream(options.download);
                 res.body.pipe(fileStream);
                 res.body.on('error', function (e) {
                   throw new Error(new Error('Failed to download: ' + e))

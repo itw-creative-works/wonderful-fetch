@@ -20,7 +20,7 @@
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
   // var isRemoteURL = /^https?:\/\/|^\/\//i;
   var SOURCE = 'library';
-  var VERSION = '0.0.12';
+  var VERSION = '0.0.13';
 
   function WonderfulFetch(url, options) {
     return new Promise(function(resolve, reject) {
@@ -56,7 +56,6 @@
         return reject(new Error('No URL provided.'))
       }
 
-      var fileStream;
       var config = {
         method: (options.method || 'get').toLowerCase(),
         headers: options.headers || {},
@@ -147,7 +146,7 @@
                   var dir = options.download.replace(name + ext, '');
                   jetpack.dir(dir)
                 }
-                fileStream = jetpack.createWriteStream(options.download);
+                var fileStream = jetpack.createWriteStream(options.download);
                 res.body.pipe(fileStream);
                 res.body.on('error', function (e) {
                   throw new Error(new Error('Failed to download: ' + e))
