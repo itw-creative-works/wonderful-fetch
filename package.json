@@ -4,7 +4,7 @@
   "description": "A wrapper around fetch.",
   "main": "./dist/index.js",
   "scripts": {
-    "test": "npm run prepare && node ./test/test.js",
+    "test": "npm run prepare && ./node_modules/mocha/bin/mocha test/ --recursive --timeout=10000",
     "prepare": "node -e 'require(`prepare-package`)'"
   },
   "engines": {
@@ -33,6 +33,7 @@
   },
   "runkitExampleFilename": "examples/process.js",
   "devDependencies": {
-    "prepare-package": "^0.0.12"
+    "mocha": "^8.4.0",
+    "prepare-package": "^0.0.13"
   }
 }
