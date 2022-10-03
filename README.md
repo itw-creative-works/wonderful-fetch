@@ -22,7 +22,7 @@
   <a href="https://itwcreativeworks.com">Site</a> | <a href="https://www.npmjs.com/package/wonderful-fetch">NPM Module</a> | <a href="https://github.com/itw-creative-works/wonderful-fetch">GitHub Repo</a>
   <br>
   <br>
-  <strong>wonderful-fetch</strong> is an easy wrapper for the `fetch` api that works in Node.js and the browser!
+  <strong>wonderful-fetch</strong> is an easy wrapper for the <code>fetch</code> api that works in Node.js and the browser!
   <br>
   <br>
   <img src="https://media.giphy.com/media/3o7WIEVjXL8EH3a1mE/giphy.gif">
