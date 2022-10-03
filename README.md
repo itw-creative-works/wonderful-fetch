@@ -108,8 +108,7 @@ For a more in-depth documentation of this library and the Wonderful Fetch servic
 Wonderful Fetch is a free fetch api that helps you make requests in Node.js or the browser.
 
 ## Final Words
-If you are still having difficulty, we would love for you to post
-a question to [the Wonderful Fetch issues page](https://github.com/itw-creative-works/wonderful-fetch/issues). It is much easier to answer questions that include your code and relevant files! So if you can provide them, we'd be extremely grateful (and more likely to help you find the answer!)
+If you are still having difficulty, we would love for you to post a question to [the Wonderful Fetch issues page](https://github.com/itw-creative-works/wonderful-fetch/issues). It is much easier to answer questions that include your code and relevant files! So if you can provide them, we'd be extremely grateful (and more likely to help you find the answer!)
 
 ## Projects Using this Library
 [Somiibo](https://somiibo.com/): A Social Media Bot with an open-source module library. <br>
