@@ -23,6 +23,16 @@ describe(`${package.name}`, () => {
     assert.strictEqual(typeof result.headers, 'object');
   });
 
+  it('Requesting error', async () => {
+    await wonderfulFetch('https://us-central1-ultimate-jekyll.cloudfunctions.net/test?error=Error+test', { log: log, tries: 1, response: 'text', output: 'complete' })
+    .then(() => {
+      assert.fail('Should have thrown an error');
+    })
+    .catch(e => {
+      assert.equal(e instanceof Error, true);
+    });
+  });
+
   // it('Requesting status 200 with JSON', async () => {
   //   const result = await wonderfulFetch('https://httpbin.org/status/200', { log: log, tries: 1, body: { test: '' } });
   //   assert.strictEqual(result.status, 200);
