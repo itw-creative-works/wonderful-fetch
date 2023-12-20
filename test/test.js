@@ -18,6 +18,13 @@ describe(`${package.name}`, () => {
     }
   });
 
+
+  it('Requesting plaintext', async () => {
+    const result = await wonderfulFetch('https://us-central1-ultimate-jekyll.cloudfunctions.net/test', { log: log, tries: 1, response: 'json', output: 'complete' });
+    assert.strictEqual(typeof result.headers, 'object');
+  });
+
+
   // it('Requesting status 200 with JSON', async () => {
   //   const result = await wonderfulFetch('https://httpbin.org/status/200', { log: log, tries: 1, body: { test: '' } });
   //   assert.strictEqual(result.status, 200);

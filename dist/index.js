@@ -20,30 +20,31 @@
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
   // var isRemoteURL = /^https?:\/\/|^\/\//i;
   var SOURCE = 'library';
-  var VERSION = '1.0.1';
+  var VERSION = '1.1.0';
 
   function WonderfulFetch(url, options) {
     return new Promise(function(resolve, reject) {
       var nodeFetch;
 
+      // Fix options
       options = options || {};
+      url = url || options.url;
       options.timeout = options.timeout || 60000;
       options.tries = typeof options.tries === 'undefined' ? 1 : options.tries;
       options.log = typeof options.log === 'undefined' ? false : options.log;
       options.cacheBreaker = typeof options.cacheBreaker === 'undefined' ? true : options.cacheBreaker;
       options.contentType = (typeof options.contentType === 'undefined' ? '' : options.contentType).toLowerCase();
       options.response = (typeof options.response === 'undefined' ? 'raw' : options.response).toLowerCase();
+      options.output = typeof options.output === 'undefined' ? 'body' : options.output;
 
       // Legacy
       if (options.raw) {
-        options.response = 'raw'
+        options.response = 'raw';
       } else if (options.json) {
-        options.response = 'json'
+        options.response = 'json';
       } else if (options.text) {
-        options.response = 'text'
+        options.response = 'text';
       }
-
-      url = url || options.url;
 
       var tries = 1;
       var maxTries = options.tries - 1;
@@ -107,15 +108,54 @@
             console.log('Fetch (' + tries + '/' + options.tries + ', ' + ms + 'ms): ', url);
           }
 
-          function _resolve(r) {
-            clearTimeout(timeoutHolder);
-            return resolve(r);
+          function _output(res, r) {
+            var headers = {};
+            var isError = r instanceof Error;
+
+            // Iterate over headers and add them to the object
+            if (res && res.headers) {
+              res.headers.forEach(function (value, key) {
+                // Parse JSON headers
+                try {
+                  headers[key] = JSON.parse(value);
+                } catch (e) {
+                  headers[key] = value;
+                }
+
+                // Add bm-properties to error object
+                if (key === 'bm-properties' && isError) {
+                  try {
+                    Object.keys(headers[key]).forEach(function (k) {
+                      r[k] = headers[key][k];
+                    })
+                  } catch (e) {
+                    console.warn('Failed to add bm-properties to error object', e);
+                  }
+                }
+              });
+            }
+
+            // Format output
+            if (isError || options.output === 'body') {
+              return r;
+            } else {
+              return {
+                status: res.status,
+                headers: headers,
+                body: r,
+              }
+            }
           }
 
-          function _reject(e) {
+          function _resolve(res, r) {
+            clearTimeout(timeoutHolder);
+            return resolve(_output(res, r));
+          }
+
+          function _reject(res, e) {
             clearTimeout(timeoutHolder);
             if (tries > maxTries && !infinite) {
-              return reject(e);
+              return reject(_output(res, e));
             } else {
               return _fetch(tries++);
             }
@@ -124,7 +164,7 @@
           clearTimeout(timeoutHolder);
           if (options.timeout > 0) {
             timeoutHolder = setTimeout(function () {
-              return _reject(new Error('Request timed out'))
+              return _reject(undefined, new Error('Request timed out'))
             }, options.timeout);
           }
 
@@ -152,14 +192,14 @@
                   throw new Error(new Error('Failed to download: ' + e))
                 });
                 fileStream.on('finish', function() {
-                  return _resolve({
+                  return _resolve(res, {
                     path: options.download
                   });
                 });
               } else {
                 if (res.ok) {
                   if (options.response === 'raw') {
-                    return _resolve(res);
+                    return _resolve(res, res);
                   } else {
                     res.text()
                     .then(function (text) {
@@ -172,16 +212,16 @@
                         }
 
                         try {
-                          return _resolve(JSONParser.parse(text));
+                          return _resolve(res, JSONParser.parse(text));
                         } catch (e) {
                           throw new Error(new Error('Response is not JSON: ' + e))
                         }
                       } else {
-                        return _resolve(text);
+                        return _resolve(res, text);
                       }
                     })
-                    .catch(e => {
-                      return _reject(e);
+                    .catch(function (e) {
+                      return _reject(res, e);
                     })
                   }
                 } else {
@@ -191,14 +231,14 @@
                       Object.assign(error, { status: res.status })
                       throw error;
                     })
-                    .catch(e => {
-                      return _reject(e);
+                    .catch(function (e) {
+                      return _reject(res, e);
                     })
                 }
               }
             })
             .catch(function (e) {
-              return _reject(e)
+              return _reject(res, e)
             })
         }, ms);
       }
