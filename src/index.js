@@ -108,9 +108,9 @@
             console.log('Fetch (' + tries + '/' + options.tries + ', ' + ms + 'ms): ', url);
           }
 
-          function _output(res, r) {
+          function _output(res, result) {
             var headers = {};
-            var isError = r instanceof Error;
+            var isError = result instanceof Error;
 
             // Iterate over headers and add them to the object
             if (res && res.headers) {
@@ -126,7 +126,7 @@
                 if (key === 'bm-properties' && isError) {
                   try {
                     Object.keys(headers[key]).forEach(function (k) {
-                      r[k] = headers[key][k];
+                      result[k] = headers[key][k];
                     })
                   } catch (e) {
                     console.warn('Failed to add bm-properties to error object', e);
@@ -137,19 +137,19 @@
 
             // Format output
             if (isError || options.output === 'body') {
-              return r;
+              return result;
             } else {
               return {
                 status: res.status,
                 headers: headers,
-                body: r,
+                body: result,
               }
             }
           }
 
-          function _resolve(res, r) {
+          function _resolve(res, result) {
             clearTimeout(timeoutHolder);
-            return resolve(_output(res, r));
+            return resolve(_output(res, result));
           }
 
           function _reject(res, e) {
@@ -238,7 +238,7 @@
               }
             })
             .catch(function (e) {
-              return _reject(res, e)
+              return _reject(undefined, e)
             })
         }, ms);
       }
