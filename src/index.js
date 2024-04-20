@@ -123,11 +123,12 @@
                   headers[key] = value;
                 }
 
+                if (!isError) {
+                  return;
+                }
+
                 // Add bm-properties to error object
-                if (
-                  (key === 'bm-properties' || options.attachResponseHeaders)
-                  && isError
-                ) {
+                if (key === 'bm-properties') {
                   try {
                     Object.keys(headers[key]).forEach(function (k) {
                       result[k] = headers[key][k];
@@ -135,6 +136,8 @@
                   } catch (e) {
                     console.warn('Failed to add bm-properties to error object', e);
                   }
+                } else if (options.attachResponseHeaders) {
+                  result[key] = headers[key];
                 }
               });
             }
