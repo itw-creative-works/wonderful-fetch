@@ -36,6 +36,7 @@
       options.contentType = (typeof options.contentType === 'undefined' ? '' : options.contentType).toLowerCase();
       options.response = (typeof options.response === 'undefined' ? 'raw' : options.response).toLowerCase();
       options.output = typeof options.output === 'undefined' ? 'body' : options.output;
+      options.attachResponseHeaders = typeof options.attachResponseHeaders === 'undefined' ? false : options.attachResponseHeaders;
 
       // Legacy
       if (options.raw) {
@@ -123,7 +124,10 @@
                 }
 
                 // Add bm-properties to error object
-                if (key === 'bm-properties' && isError) {
+                if (
+                  (key === 'bm-properties' || options.attachResponseHeaders)
+                  && isError
+                ) {
                   try {
                     Object.keys(headers[key]).forEach(function (k) {
                       result[k] = headers[key][k];
@@ -228,7 +232,8 @@
                   res.text()
                     .then(function (text) {
                       var error = new Error(text || res.statusText || 'Unknown error');
-                      Object.assign(error, { status: res.status })
+                      Object.assign(error, { status: res.status });
+                      console.log('--headers', res.headers);
                       throw error;
                     })
                     .catch(function (e) {
