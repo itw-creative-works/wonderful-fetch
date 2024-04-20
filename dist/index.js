@@ -20,7 +20,7 @@
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
   // var isRemoteURL = /^https?:\/\/|^\/\//i;
   var SOURCE = 'library';
-  var VERSION = '1.1.3';
+  var VERSION = '1.1.4';
 
   function WonderfulFetch(url, options) {
     return new Promise(function(resolve, reject) {
@@ -236,7 +236,6 @@
                     .then(function (text) {
                       var error = new Error(text || res.statusText || 'Unknown error');
                       Object.assign(error, { status: res.status });
-                      console.log('--headers', res.headers);
                       throw error;
                     })
                     .catch(function (e) {

@@ -236,7 +236,6 @@
                     .then(function (text) {
                       var error = new Error(text || res.statusText || 'Unknown error');
                       Object.assign(error, { status: res.status });
-                      console.log('--headers', res.headers);
                       throw error;
                     })
                     .catch(function (e) {
