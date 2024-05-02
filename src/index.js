@@ -193,7 +193,10 @@
 
                 // Get content type
                 var type = res.headers.get('content-type');
-                var ext = mime.extension(type);
+                var ext = mime.extension(type)
+                  .replace('jpeg', 'jpg')
+                  // .replace('tiff', 'tif')
+                  // .replace('svg+xml', 'svg');
 
                 // Create directory if it doesn't exist
                 if (!jetpack.exists(options.download)) {

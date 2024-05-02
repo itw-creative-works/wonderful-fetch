@@ -22,7 +22,7 @@
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
   // var isRemoteURL = /^https?:\/\/|^\/\//i;
   var SOURCE = 'library';
-  var VERSION = '1.1.7';
+  var VERSION = '1.1.8';
 
   function WonderfulFetch(url, options) {
     return new Promise(function(resolve, reject) {
@@ -193,7 +193,10 @@
 
                 // Get content type
                 var type = res.headers.get('content-type');
-                var ext = mime.extension(type);
+                var ext = mime.extension(type)
+                  .replace('jpeg', 'jpg')
+                  // .replace('tiff', 'tif')
+                  // .replace('svg+xml', 'svg');
 
                 // Create directory if it doesn't exist
                 if (!jetpack.exists(options.download)) {
