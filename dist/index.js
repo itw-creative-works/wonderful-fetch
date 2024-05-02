@@ -16,11 +16,12 @@
 
   var JSONParser;
   var jetpack;
+  var path;
 
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
   // var isRemoteURL = /^https?:\/\/|^\/\//i;
   var SOURCE = 'library';
-  var VERSION = '1.1.4';
+  var VERSION = '1.1.5';
 
   function WonderfulFetch(url, options) {
     return new Promise(function(resolve, reject) {

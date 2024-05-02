@@ -29,17 +29,39 @@
   <br>
 </p>
 
-## Wonderful Fetch Works in Node AND browser environments
+## 🌐 Wonderful Fetch Works in Node AND browser environments
 Yes, this module works in both Node and browser environments, including compatibility with [Webpack](https://www.npmjs.com/package/webpack) and [Browserify](https://www.npmjs.com/package/browserify)!
 
-## Features
+## ⚡️ Features
 * Intuitive error handling
 * Download files directly to drive
 
 <!-- ### Getting an API key -->
 <!-- You can use so much of `wonderful-fetch` for free, but if you want to do some advanced stuff, you'll need an API key. You can get one by signing up for an account at [https://wonderful-fetch.dev/signup](https://wonderful-fetch.dev/signup). -->
 
-## Install Wonderful Fetch
+## 🪦 The old way
+You have to manually check if the response is `ok` and then parse the response as JSON.
+```js
+fetch('https://httpbin.org/json')
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
+  .then((data) => console.log(data))
+  .catch((error) => console.error(error));
+```
+
+## 🦄 The Wonderful Fetch way
+With Wonderful Fetch, you can automatically parse the response as JSON and handle all http errors with a single line of code.
+```js
+wonderfulFetch('https://httpbin.org/json', {response: 'json'})
+  .then((response) => console.log(response))
+  .catch((error) => console.error(error));
+```
+
+## 📦 Install Wonderful Fetch
 ### Install via npm
 Install with npm if you plan to use `wonderful-fetch` in a Node project or in the browser.
 ```shell
@@ -62,7 +84,7 @@ Install with CDN if you plan to use Wonderful Fetch only in a browser environmen
 </script>
 ```
 
-## Using Wonderful Fetch
+## 🚀 Using Wonderful Fetch
 After you have followed the install step, you can start using `wonderful-fetch` to make requests to any URL
 
 ### wonderfulFetch(url, options)
@@ -96,20 +118,50 @@ The options for `wonderfulFetch(url, options)` are as follows.
     * Default: `null`
 
 #### Examples
+##### Basic Fetch
+Perform a basic fetch request.
 ```js
-wonderfulFetch('https://httpbin.org/status/200', {method: 'get'});
+wonderfulFetch('https://httpbin.org/status/200', {method: 'get'})
+  .then((response) => console.log(response))
+  .catch((error) => console.error(error));
 ```
 
-## Extending Capabilities
+##### Basic Fetch JSON
+Perform a basic fetch request and return the response as JSON.
+```js
+wonderfulFetch('https://httpbin.org/status/200', {method: 'get', response: 'json'})
+  .then((response) => console.log(response))
+  .catch((error) => console.error(error));
+```
+
+##### Download File
+Download a file to the specified `download` path. Node.js only.
+```js
+wonderfulFetch('https://httpbin.org/image/png', {download: './image.png'})
+  .then((response) => console.log(response))
+  .catch((error) => console.error(error));
+```
+
+
+##### Handle Errors with `catch`
+Handle errors with the `catch` method.
+```js
+wonderfulFetch('https://httpbin.org/status/404', {method: 'get'})
+  .then((response) => console.log(response))
+  .catch((error) => console.error(error));
+```
+
+
+## 📚 Extending Capabilities
 For a more in-depth documentation of this library and the Wonderful Fetch service, please visit the official Wonderful Fetch website.
 
-## What Can Wonderful Fetch do?
+## ❓ What Can Wonderful Fetch do?
 Wonderful Fetch is a free fetch api that helps you make requests in Node.js or the browser.
 
-## Final Words
+## 📝 Final Words
 If you are still having difficulty, we would love for you to post a question to [the Wonderful Fetch issues page](https://github.com/itw-creative-works/wonderful-fetch/issues). It is much easier to answer questions that include your code and relevant files! So if you can provide them, we'd be extremely grateful (and more likely to help you find the answer!)
 
-## Projects Using this Library
+## 🎉 Projects Using this Library
 [Somiibo](https://somiibo.com/): A Social Media Bot with an open-source module library. <br>
 [JekyllUp](https://jekyllup.com/): A website devoted to sharing the best Jekyll themes. <br>
 [Slapform](https://slapform.com/): A backend processor for your HTML forms on static sites. <br>

@@ -16,6 +16,7 @@
 
   var JSONParser;
   var jetpack;
+  var path;
 
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
   // var isRemoteURL = /^https?:\/\/|^\/\//i;
