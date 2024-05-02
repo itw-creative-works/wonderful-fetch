@@ -17,11 +17,12 @@
   var JSONParser;
   var jetpack;
   var path;
+  var mime;
 
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
   // var isRemoteURL = /^https?:\/\/|^\/\//i;
   var SOURCE = 'library';
-  var VERSION = '1.1.6';
+  var VERSION = '1.1.7';
 
   function WonderfulFetch(url, options) {
     return new Promise(function(resolve, reject) {
@@ -186,19 +187,43 @@
             .then(function (res) {
 
               if (res.ok && options.download) {
+                // Load dependencies
                 jetpack = jetpack || require('fs-jetpack');
+                mime = mime || require('mime-types');
+
+                // Get content type
+                var type = res.headers.get('content-type');
+                var ext = mime.extension(type);
+
+                // Create directory if it doesn't exist
                 if (!jetpack.exists(options.download)) {
                   path = path || require('path');
-                  var name = path.parse(options.download).name;
-                  var ext = path.parse(options.download).ext;
-                  var dir = options.download.replace(name + ext, '');
-                  jetpack.dir(dir)
+
+                  // Get directory
+                  var dir = path.dirname(options.download);
+
+                  // Create directory
+                  jetpack.dir(dir);
                 }
+
+                // Add extension if there isn't one
+                var existingExt = path.extname(options.download);
+                if (!existingExt) {
+                  options.download += '.' + ext;
+                }
+
+                // Create file stream
                 var fileStream = jetpack.createWriteStream(options.download);
+
+                // Pipe response to file
                 res.body.pipe(fileStream);
+
+                // Handle errors
                 res.body.on('error', function (e) {
                   throw new Error(new Error('Failed to download: ' + e))
                 });
+
+                // Handle finish
                 fileStream.on('finish', function() {
                   return _resolve(res, {
                     res: res,
