@@ -21,7 +21,7 @@
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
   // var isRemoteURL = /^https?:\/\/|^\/\//i;
   var SOURCE = 'library';
-  var VERSION = '1.1.5';
+  var VERSION = '1.1.6';
 
   function WonderfulFetch(url, options) {
     return new Promise(function(resolve, reject) {
@@ -201,7 +201,8 @@
                 });
                 fileStream.on('finish', function() {
                   return _resolve(res, {
-                    path: options.download
+                    res: res,
+                    path: options.download,
                   });
                 });
               } else {

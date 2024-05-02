@@ -201,7 +201,8 @@
                 });
                 fileStream.on('finish', function() {
                   return _resolve(res, {
-                    path: options.download
+                    res: res,
+                    path: options.download,
                   });
                 });
               } else {
