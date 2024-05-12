@@ -22,7 +22,7 @@
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
   // var isRemoteURL = /^https?:\/\/|^\/\//i;
   var SOURCE = 'library';
-  var VERSION = '1.1.8';
+  var VERSION = '1.1.9';
 
   function WonderfulFetch(url, options) {
     return new Promise(function(resolve, reject) {
@@ -56,15 +56,19 @@
       var bodyIsObject = options.body && typeof options.body === 'object';
       var bodyIsFormData = bodyIsObject && typeof options.body.append === 'function';
 
+      // Check if URL is provided
       if (!url) {
         return reject(new Error('No URL provided.'))
       }
 
+      // Build configuration
       var config = {
         method: (options.method || 'get').toLowerCase(),
         headers: options.headers || {},
+        body: null,
       }
 
+      // Format body
       if (options.body) {
         if (bodyIsFormData) {
           config.body = options.body;
@@ -75,9 +79,7 @@
         }
       }
 
-      // if (options.json && options.body && config.method === 'post') {
-      //   config.headers['Content-Type'] = 'application/json';
-      // }
+      // Set content type
       if (
         (bodyIsObject && !bodyIsFormData)
         || (options.contentType === 'json')
@@ -85,16 +87,21 @@
         config.headers['Content-Type'] = 'application/json';
       }
 
+      // GET requests should not have a body or content type
       if (config.method === 'get') {
         delete config.body;
+        delete config.headers['Content-Type'];
       }
 
+      // Log
       if (options.log) {
         console.log('Fetch configuration:', 'bodyIsFormData=' + bodyIsFormData, 'bodyIsObject=' + bodyIsObject, options, config);
       }
 
+      // Set timeout
       var timeoutHolder;
 
+      // Fetch
       function _fetch() {
         var ms = Math.min((3000 * (tries - 1)), 60000);
         ms = ms > 0 ? ms : 1;
@@ -283,7 +290,6 @@
     });
 
   };
-
 
   // Reference
   if (environment === 'browser') {
