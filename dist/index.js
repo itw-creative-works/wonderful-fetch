@@ -22,7 +22,7 @@
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
   // var isRemoteURL = /^https?:\/\/|^\/\//i;
   var SOURCE = 'library';
-  var VERSION = '1.1.9';
+  var VERSION = '1.1.11';
 
   function WonderfulFetch(url, options) {
     return new Promise(function(resolve, reject) {
@@ -86,6 +86,15 @@
       ) {
         config.headers['Content-Type'] = 'application/json';
       }
+
+      // FormData Headers
+      // if (bodyIsFormData) {
+      //   config.headers['Content-Type'] = 'multipart/form-data';
+      //   Object.keys(options.body.getHeaders()).forEach(function (key) {
+      //     config.headers[key] = options.body.getHeaders()[key];
+      //     console.log('+++key', key, config.headers[key]);
+      //   });
+      // }
 
       // GET requests should not have a body or content type
       if (config.method === 'get') {

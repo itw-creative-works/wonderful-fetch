@@ -1,11 +1,12 @@
 {
   "name": "wonderful-fetch",
-  "version": "1.1.9",
+  "version": "1.1.11",
   "description": "A wrapper around fetch.",
   "main": "./dist/index.js",
   "scripts": {
     "test": "npm run prepare && ./node_modules/mocha/bin/mocha test/ --recursive --timeout=30000",
-    "prepare": "node -e 'require(`prepare-package`)()'"
+    "prepare": "node -e 'require(`prepare-package`)()'",
+    "prepare:watch": "nodemon -w ./src -e '*' --exec 'npm run prepare'"
   },
   "engines": {
     "node": ">=6.0.0"
@@ -32,6 +33,11 @@
   },
   "devDependencies": {
     "mocha": "^8.4.0",
-    "prepare-package": "^1.0.3"
+    "prepare-package": "^1.1.5"
+  },
+  "preparePackage": {
+    "input": "./src",
+    "output": "./dist",
+    "replace": {}
   }
 }
