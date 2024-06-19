@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://cdn.itwcreativeworks.com/assets/itw-creative-works/images/logo/itw-creative-works-brandmark-black-x.svg">
+  <a href="https://itwcreativeworks.com">
     <img src="https://cdn.itwcreativeworks.com/assets/itw-creative-works/images/logo/itw-creative-works-brandmark-black-x.svg" width="100px">
   </a>
 </p>
@@ -36,7 +36,7 @@ Yes, this module works in both Node and browser environments, including compatib
 * Intuitive error handling
 * Download files directly to drive
 
-<!-- ### Getting an API key -->
+<!-- ### 🔑 Getting an API key -->
 <!-- You can use so much of `wonderful-fetch` for free, but if you want to do some advanced stuff, you'll need an API key. You can get one by signing up for an account at [https://wonderful-fetch.dev/signup](https://wonderful-fetch.dev/signup). -->
 
 ## 🪦 The old way
@@ -62,7 +62,7 @@ wonderfulFetch('https://httpbin.org/json', {response: 'json'})
 ```
 
 ## 📦 Install Wonderful Fetch
-### Install via npm
+### Option 1: Install via npm
 Install with npm if you plan to use `wonderful-fetch` in a Node project or in the browser.
 ```shell
 npm install wonderful-fetch
@@ -74,7 +74,7 @@ const wonderfulFetch = require('wonderful-fetch');
 wonderfulFetch();
 ```
 
-### Install via CDN
+### Option 2: Install via CDN
 Install with CDN if you plan to use Wonderful Fetch only in a browser environment.
 ```html
 <script src="https://cdn.jsdelivr.net/npm/wonderful-fetch@latest/dist/index.min.js"></script>

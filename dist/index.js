@@ -22,7 +22,7 @@
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
   // var isRemoteURL = /^https?:\/\/|^\/\//i;
   var SOURCE = 'library';
-  var VERSION = '1.1.11';
+  var VERSION = '1.1.12';
 
   function WonderfulFetch(url, options) {
     return new Promise(function(resolve, reject) {
