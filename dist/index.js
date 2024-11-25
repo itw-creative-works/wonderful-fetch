@@ -20,9 +20,8 @@
   var mime;
 
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
-  // var isRemoteURL = /^https?:\/\/|^\/\//i;
   var SOURCE = 'library';
-  var VERSION = '1.1.12';
+  var VERSION = '1.2.0';
 
   function WonderfulFetch(url, options) {
     return new Promise(function(resolve, reject) {
@@ -39,6 +38,7 @@
       options.response = (typeof options.response === 'undefined' ? 'raw' : options.response).toLowerCase();
       options.output = typeof options.output === 'undefined' ? 'body' : options.output;
       options.attachResponseHeaders = typeof options.attachResponseHeaders === 'undefined' ? false : options.attachResponseHeaders;
+      options.authorization = typeof options.authorization === 'undefined' ? false : options.authorization;
 
       // Legacy
       if (options.raw) {
@@ -112,9 +112,11 @@
 
       // Fetch
       function _fetch() {
+        // Set timeout
         var ms = Math.min((3000 * (tries - 1)), 60000);
         ms = ms > 0 ? ms : 1;
 
+        // Add cache breaker
         url = new URL(url);
         var cacheBreaker = options.cacheBreaker === true ? Math.floor(new Date().getTime() / 1000) : options.cacheBreaker;
         if (cacheBreaker) {
@@ -122,7 +124,9 @@
         }
         url = url.toString();
 
+        // Main fetch function
         setTimeout(function () {
+          // Log
           if (options.log) {
             console.log('Fetch (' + tries + '/' + options.tries + ', ' + ms + 'ms): ', url);
           }
@@ -172,6 +176,7 @@
             }
           }
 
+          // Resolve and reject
           function _resolve(res, result) {
             clearTimeout(timeoutHolder);
             return resolve(_output(res, result));
@@ -186,6 +191,42 @@
             }
           }
 
+          // Authorization
+          function _authorization() {
+            return new Promise(function(resolve, reject) {
+              var auth = options.authorization;
+
+              // If no authorization is required, resolve
+              if (!auth) {
+                return resolve();
+              }
+
+              // If it's not Firebase, set the header directly
+              if (auth !== 'firebase') {
+                // Autmatically add Bearer if it's not there
+                config.headers['Authorization'] = auth.matches(/^Bearer |^Basic |^Digest /)
+                  ? auth
+                  : 'Bearer ' + auth;
+
+                // Resolve
+                return resolve();
+              }
+
+              // If it's Firebase, get the token
+              try {
+                firebase.auth().currentUser.getIdToken(false)
+                .then(function (token) {
+                  config.headers['Authorization'] = 'Bearer ' + token;
+                  return resolve();
+                })
+              } catch (e) {
+                console.warn('Failed to get Firebase token', e);
+                return resolve();
+              }
+            });
+          }
+
+          // Set timeout
           clearTimeout(timeoutHolder);
           if (options.timeout > 0) {
             timeoutHolder = setTimeout(function () {
@@ -199,102 +240,109 @@
           }
           nodeFetch = nodeFetch || require('node-fetch');
 
-          nodeFetch(url, config)
-            .then(function (res) {
+          // Authorization
+          _authorization()
+          .then(function () {
+            // Perform fetch
+            nodeFetch(url, config)
+              .then(function (res) {
+                // Handle download
+                if (res.ok && options.download) {
+                  // Load dependencies
+                  jetpack = jetpack || require('fs-jetpack');
+                  mime = mime || require('mime-types');
 
-              if (res.ok && options.download) {
-                // Load dependencies
-                jetpack = jetpack || require('fs-jetpack');
-                mime = mime || require('mime-types');
+                  // Get content type
+                  var type = res.headers.get('content-type');
+                  var ext = mime.extension(type)
+                    .replace('jpeg', 'jpg')
+                    // .replace('tiff', 'tif')
+                    // .replace('svg+xml', 'svg');
 
-                // Get content type
-                var type = res.headers.get('content-type');
-                var ext = mime.extension(type)
-                  .replace('jpeg', 'jpg')
-                  // .replace('tiff', 'tif')
-                  // .replace('svg+xml', 'svg');
+                  // Create directory if it doesn't exist
+                  if (!jetpack.exists(options.download)) {
+                    path = path || require('path');
 
-                // Create directory if it doesn't exist
-                if (!jetpack.exists(options.download)) {
-                  path = path || require('path');
+                    // Get directory
+                    var dir = path.dirname(options.download);
 
-                  // Get directory
-                  var dir = path.dirname(options.download);
+                    // Create directory
+                    jetpack.dir(dir);
+                  }
 
-                  // Create directory
-                  jetpack.dir(dir);
-                }
+                  // Add extension if there isn't one
+                  var existingExt = path.extname(options.download);
+                  if (!existingExt) {
+                    options.download += '.' + ext;
+                  }
 
-                // Add extension if there isn't one
-                var existingExt = path.extname(options.download);
-                if (!existingExt) {
-                  options.download += '.' + ext;
-                }
+                  // Create file stream
+                  var fileStream = jetpack.createWriteStream(options.download);
 
-                // Create file stream
-                var fileStream = jetpack.createWriteStream(options.download);
+                  // Pipe response to file
+                  res.body.pipe(fileStream);
 
-                // Pipe response to file
-                res.body.pipe(fileStream);
-
-                // Handle errors
-                res.body.on('error', function (e) {
-                  throw new Error(new Error('Failed to download: ' + e))
-                });
-
-                // Handle finish
-                fileStream.on('finish', function() {
-                  return _resolve(res, {
-                    res: res,
-                    path: options.download,
+                  // Handle errors
+                  res.body.on('error', function (e) {
+                    throw new Error(new Error('Failed to download: ' + e))
                   });
-                });
-              } else {
-                if (res.ok) {
-                  if (options.response === 'raw') {
-                    return _resolve(res, res);
+
+                  // Handle finish
+                  fileStream.on('finish', function() {
+                    return _resolve(res, {
+                      res: res,
+                      path: options.download,
+                    });
+                  });
+                } else {
+                  if (res.ok) {
+                    if (options.response === 'raw') {
+                      return _resolve(res, res);
+                    } else {
+                      res.text()
+                      .then(function (text) {
+                        if (options.response === 'json') {
+
+                          if (environment === 'node') {
+                            JSONParser = JSONParser || require('json5');
+                          } else {
+                            JSONParser = typeof JSON5 === 'undefined' ? JSON : JSON5;
+                          }
+
+                          try {
+                            return _resolve(res, JSONParser.parse(text));
+                          } catch (e) {
+                            throw new Error(new Error('Response is not JSON: ' + e))
+                          }
+                        } else {
+                          return _resolve(res, text);
+                        }
+                      })
+                      .catch(function (e) {
+                        return _reject(res, e);
+                      })
+                    }
                   } else {
                     res.text()
-                    .then(function (text) {
-                      if (options.response === 'json') {
-
-                        if (environment === 'node') {
-                          JSONParser = JSONParser || require('json5');
-                        } else {
-                          JSONParser = typeof JSON5 === 'undefined' ? JSON : JSON5;
-                        }
-
-                        try {
-                          return _resolve(res, JSONParser.parse(text));
-                        } catch (e) {
-                          throw new Error(new Error('Response is not JSON: ' + e))
-                        }
-                      } else {
-                        return _resolve(res, text);
-                      }
-                    })
-                    .catch(function (e) {
-                      return _reject(res, e);
-                    })
+                      .then(function (text) {
+                        var error = new Error(text || res.statusText || 'Unknown error');
+                        Object.assign(error, { status: res.status });
+                        throw error;
+                      })
+                      .catch(function (e) {
+                        return _reject(res, e);
+                      })
                   }
-                } else {
-                  res.text()
-                    .then(function (text) {
-                      var error = new Error(text || res.statusText || 'Unknown error');
-                      Object.assign(error, { status: res.status });
-                      throw error;
-                    })
-                    .catch(function (e) {
-                      return _reject(res, e);
-                    })
                 }
-              }
-            })
-            .catch(function (e) {
-              return _reject(undefined, e)
-            })
+              })
+              .catch(function (e) {
+                return _reject(undefined, e)
+              })
+          });
         }, ms);
       }
+
+      // Perform the fetch
       _fetch();
     });
 
