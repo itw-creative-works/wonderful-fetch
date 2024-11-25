@@ -33,12 +33,17 @@
       options.timeout = options.timeout || 60000;
       options.tries = typeof options.tries === 'undefined' ? 1 : options.tries;
       options.log = typeof options.log === 'undefined' ? false : options.log;
+      options.method = options.method || 'get';
       options.cacheBreaker = typeof options.cacheBreaker === 'undefined' ? true : options.cacheBreaker;
       options.contentType = (typeof options.contentType === 'undefined' ? '' : options.contentType).toLowerCase();
       options.response = (typeof options.response === 'undefined' ? 'raw' : options.response).toLowerCase();
       options.output = typeof options.output === 'undefined' ? 'body' : options.output;
       options.attachResponseHeaders = typeof options.attachResponseHeaders === 'undefined' ? false : options.attachResponseHeaders;
+      options.download = options.download || false;
       options.authorization = typeof options.authorization === 'undefined' ? false : options.authorization;
+      options.headers = options.headers || {};
+      options.query = options.query || {};
+      options.body = options.body || null;
 
       // Legacy
       if (options.raw) {
@@ -63,8 +68,8 @@
 
       // Build configuration
       var config = {
-        method: (options.method || 'get').toLowerCase(),
-        headers: options.headers || {},
+        method: options.method.toLowerCase(),
+        headers: options.headers,
         body: null,
       }
 
@@ -116,12 +121,21 @@
         var ms = Math.min((3000 * (tries - 1)), 60000);
         ms = ms > 0 ? ms : 1;
 
-        // Add cache breaker
+        // Build URL
         url = new URL(url);
+
+        // Add query parameters
+        Object.keys(options.query).forEach(function (key) {
+          url.searchParams.set(key, options.query[key]);
+        });
+
+        // Add cache breaker
         var cacheBreaker = options.cacheBreaker === true ? Math.floor(new Date().getTime() / 1000) : options.cacheBreaker;
         if (cacheBreaker) {
           url.searchParams.set('cb', cacheBreaker)
         }
+
+        // Convert to string
         url = url.toString();
 
         // Main fetch function
@@ -204,7 +218,7 @@
               // If it's not Firebase, set the header directly
               if (auth !== 'firebase') {
                 // Autmatically add Bearer if it's not there
-                config.headers['Authorization'] = auth.matches(/^Bearer |^Basic |^Digest /)
+                config.headers['Authorization'] = auth.match(/^Bearer |^Basic |^Digest /)
                   ? auth
                   : 'Bearer ' + auth;
 

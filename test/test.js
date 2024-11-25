@@ -20,9 +20,16 @@ describe(`${package.name}`, () => {
     }
   });
 
+  // Make a test for adding query parameters
+  it('Adding query parameters', async () => {
+    const result = await fetch('https://httpbin.org/get', { log: log, tries: 1, response: 'json', query: { test: 'test' } });
+    assert.strictEqual(result.args.test, 'test');
+  });
+
   // Test for requesting plaintext response
   it('Requesting plaintext', async () => {
     const result = await fetch('https://us-central1-ultimate-jekyll.cloudfunctions.net/test', { log: log, tries: 1, response: 'json', output: 'complete' });
+    console.log('result', result);
     assert.strictEqual(typeof result.headers, 'object');
   });
 
@@ -59,9 +66,15 @@ describe(`${package.name}`, () => {
     assert.strictEqual(typeof result, 'object');
   });
 
-  // New test for requesting with authorization set to "firebase"
-  it('Requesting with authorization', async () => {
-    const result = await fetch('https://example.com/protected', { log: log, tries: 1, authorization: 'firebase' });
-    assert.strictEqual(result.status, 200);
+  // Test for requesting with authorization
+  it('Requesting with authorization set', async () => {
+    const result = await fetch('https://httpbin.org/get', { log: log, tries: 1, response: 'json', authorization: 'XXX' });
+    assert.strictEqual(result.headers.Authorization === 'Bearer XXX', true);
+  });
+
+  // Test for requesting authorization with 'firebase'
+  it('Requesting with authorization firebase', async () => {
+    const result = await fetch('https://httpbin.org/get', { log: log, tries: 1, response: 'json', authorization: 'firebase' });
+    assert.strictEqual(result.headers.Authorization === undefined, true);
   });
 });
