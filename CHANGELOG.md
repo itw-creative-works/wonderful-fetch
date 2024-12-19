@@ -15,6 +15,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `Security` in case of vulnerabilities.
 
 ---
+## [1.3.0] - 2024-12-19
+### Added
+- If `options.referrer` is set to `true` (this is the default), the `x-wonderful-fetch-referrer` header will be added to the request with the value of the current url.
+
 ## [1.0.0] - 2024-06-19
 ### Added
 - Initial release of the project 🚀

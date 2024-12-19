@@ -21,7 +21,7 @@
 
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
   var SOURCE = 'library';
-  var VERSION = '1.2.2';
+  var VERSION = '1.3.0';
 
   function WonderfulFetch(url, options) {
     return new Promise(function(resolve, reject) {
@@ -41,6 +41,7 @@
       options.attachResponseHeaders = typeof options.attachResponseHeaders === 'undefined' ? false : options.attachResponseHeaders;
       options.download = options.download || false;
       options.authorization = typeof options.authorization === 'undefined' ? false : options.authorization;
+      options.referrer = typeof options.referrer === 'undefined' ? true : options.referrer;
       options.headers = options.headers || {};
       options.query = options.query || {};
       options.body = options.body || null;
@@ -105,6 +106,13 @@
       if (config.method === 'get') {
         delete config.body;
         delete config.headers['Content-Type'];
+      }
+
+      // Referrer
+      if (options.referrer === true) {
+        config.headers['x-wonderful-fetch-referrer'] = _getCurrentUrl();
+      } else if (options.referrer) {
+        config.headers['x-wonderful-fetch-referrer'] = options.referrer;
       }
 
       // Log
@@ -356,10 +364,19 @@
         }, ms);
       }
 
+      function _getCurrentUrl() {
+        try {
+          var url = window.location;
+
+          return url.protocol + '//' + url.host + url.pathname
+        } catch (e) {
+          return '';
+        }
+      }
+
       // Perform the fetch
       _fetch();
     });
-
   };
 
   // Reference
