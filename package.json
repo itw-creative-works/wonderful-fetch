@@ -1,6 +1,6 @@
 {
   "name": "wonderful-fetch",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "A wrapper around fetch.",
   "main": "./dist/index.js",
   "scripts": {

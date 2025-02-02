@@ -366,9 +366,12 @@
 
       function _getCurrentUrl() {
         try {
-          var url = window.location;
-
-          return url.protocol + '//' + url.host + url.pathname
+          if (typeof window !== 'undefined' && window.location) {
+            var url = window.location;
+            return url.protocol + '//' + url.host + url.pathname;
+          } else {
+            return process.env.BEM_FUNCTIONS_URL || '';
+          }
         } catch (e) {
           return '';
         }

@@ -21,7 +21,7 @@
 
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
   var SOURCE = 'library';
-  var VERSION = '1.3.0';
+  var VERSION = '1.3.1';
 
   function WonderfulFetch(url, options) {
     return new Promise(function(resolve, reject) {
@@ -366,9 +366,12 @@
 
       function _getCurrentUrl() {
         try {
-          var url = window.location;
-
-          return url.protocol + '//' + url.host + url.pathname
+          if (typeof window !== 'undefined' && window.location) {
+            var url = window.location;
+            return url.protocol + '//' + url.host + url.pathname;
+          } else {
+            return process.env.BEM_FUNCTIONS_URL || '';
+          }
         } catch (e) {
           return '';
         }
