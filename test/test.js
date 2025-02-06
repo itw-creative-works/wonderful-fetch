@@ -6,6 +6,12 @@ describe(`${package.name}`, () => {
   const fetch = require('../dist/index.js');
 
   // Test for requesting status 200
+  // it('defaults to get', async () => {
+  //   const result = await fetch('https://httpbin.org/status/200', { log: log, tries: 1 });
+  //   assert.strictEqual(result.status, 200);
+  // });
+
+  // Test for requesting status 200
   it('Requesting status 200', async () => {
     const result = await fetch('https://httpbin.org/status/200', { log: log, tries: 1 });
     assert.strictEqual(result.status, 200);

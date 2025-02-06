@@ -21,15 +21,17 @@
 
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
   var SOURCE = 'library';
-  var VERSION = '1.3.1';
+  var VERSION = '1.3.2';
 
   function WonderfulFetch(url, options) {
     return new Promise(function(resolve, reject) {
       var nodeFetch;
 
+      // Fix url
+      url = url || options.url;
+
       // Fix options
       options = options || {};
-      url = url || options.url;
       options.timeout = options.timeout || 60000;
       options.tries = typeof options.tries === 'undefined' ? 1 : options.tries;
       options.log = typeof options.log === 'undefined' ? false : options.log;
@@ -276,7 +278,7 @@
 
                   // Get content type
                   var type = res.headers.get('content-type');
-                  var ext = mime.extension(type)
+                  var ext = (mime.extension(type) || '')
                     .replace('jpeg', 'jpg')
                     // .replace('tiff', 'tif')
                     // .replace('svg+xml', 'svg');
