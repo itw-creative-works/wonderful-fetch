@@ -21,7 +21,7 @@
 
   var environment = (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') ? 'node' : 'browser';
   var SOURCE = 'library';
-  var VERSION = '1.3.2';
+  var VERSION = '1.3.3';
 
   function WonderfulFetch(url, options) {
     return new Promise(function(resolve, reject) {
