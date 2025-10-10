@@ -43,7 +43,8 @@
       options.attachResponseHeaders = typeof options.attachResponseHeaders === 'undefined' ? false : options.attachResponseHeaders;
       options.download = options.download || false;
       options.authorization = typeof options.authorization === 'undefined' ? false : options.authorization;
-      options.referrer = typeof options.referrer === 'undefined' ? true : options.referrer;
+      // options.referrer = typeof options.referrer === 'undefined' ? true : options.referrer;
+      options.referrer = typeof options.referrer === 'undefined' ? false : options.referrer; // Disabled 10/9/25 because some sites blocked x-wonderful-fetch-referrer in its Access-Control-Allow-Headers
       options.headers = options.headers || {};
       options.query = options.query || {};
       options.body = options.body || null;
