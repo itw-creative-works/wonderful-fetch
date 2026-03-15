@@ -16,8 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 ## [2.0.0] - 2026-03-15
-### BREAKING
-- CJS consumers must now use `require('wonderful-fetch').default` or `const { WonderfulFetch } = require('wonderful-fetch')`
+### Removed
 - Dropped `json5` dependency — uses native `JSON.parse()` everywhere
 - Removed firebase authorization logic (handled by `authorized-fetch.js` in UJM)
 - Removed `referrer` option (no consumers)

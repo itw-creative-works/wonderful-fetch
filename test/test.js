@@ -5,7 +5,7 @@ const fs = require('fs');
 const log = false;
 
 describe(`${pkg.name} v${pkg.version}`, () => {
-  const fetch = require('../dist/index.js').default;
+  const fetch = require('../dist/index.js');
 
   // --- Basic responses ---
 

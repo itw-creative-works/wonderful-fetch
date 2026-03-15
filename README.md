@@ -45,14 +45,11 @@ npm install wonderful-fetch
 ```
 
 ```js
-// ESM (recommended)
+// ESM
 import fetch from 'wonderful-fetch';
 
 // CommonJS
-const fetch = require('wonderful-fetch').default;
-
-// Named import (ESM or CommonJS)
-const { WonderfulFetch } = require('wonderful-fetch');
+const fetch = require('wonderful-fetch');
 ```
 
 ### CDN
