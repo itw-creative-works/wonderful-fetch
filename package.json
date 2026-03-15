@@ -1,6 +1,6 @@
 {
   "name": "wonderful-fetch",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A wrapper around fetch.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -64,9 +64,9 @@
     "mime-types": false
   },
   "dependencies": {
-    "fs-jetpack": "^4.3.1",
+    "fs-jetpack": "^5.1.0",
     "itwcw-package-analytics": "^1.0.8",
-    "mime-types": "^2.1.35"
+    "mime-types": "^3.0.2"
   },
   "devDependencies": {
     "mocha": "^11.7.5",
