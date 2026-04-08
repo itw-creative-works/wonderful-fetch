@@ -4,7 +4,7 @@ export function buildRequest(url, options) {
 
   // Build config
   const config = {
-    method: options.method,
+    method: options.method.toUpperCase(),
     headers: { ...options.headers },
     body: null,
   };
@@ -29,7 +29,7 @@ export function buildRequest(url, options) {
   }
 
   // GET requests should not have a body or Content-Type
-  if (config.method === 'get') {
+  if (config.method === 'GET') {
     delete config.body;
     delete config.headers['Content-Type'];
   }

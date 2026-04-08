@@ -24,7 +24,7 @@ async function WonderfulFetch(url, options) {
     }
 
     // Resolve fetch function
-    const fetchFn = (typeof window !== 'undefined' && window.fetch) || fetch;
+    const fetchFn = (typeof window !== 'undefined' && window.fetch) || globalThis.fetch;
 
     // Log
     if (options.log) {

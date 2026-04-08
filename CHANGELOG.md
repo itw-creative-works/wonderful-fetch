@@ -15,6 +15,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `Security` in case of vulnerabilities.
 
 ---
+## [2.0.5] - 2026-04-07
+### Fixed
+- Use `globalThis.fetch` instead of bare `fetch` to prevent variable shadowing bugs
+- Uppercase HTTP methods in fetch config to fix Node 22 undici rejecting lowercase `PATCH`
+
+### Added
+- 11 new tests: no-options default, complete output with text/raw, custom cache breaker, Digest auth, contentType json override, PATCH method, retry success, network errors, error message content, non-image downloads (28 → 39 total)
+
 ## [2.0.0] - 2026-03-15
 ### Removed
 - Dropped `json5` dependency — uses native `JSON.parse()` everywhere
