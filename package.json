@@ -41,7 +41,8 @@
         "path"
       ]
     },
-    "replace": {}
+    "replace": {},
+    "hooks": {}
   },
   "engines": {
     "node": ">=18"
@@ -55,6 +56,10 @@
   ],
   "author": "ITW Creative Works",
   "license": "MIT",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "bugs": {
     "url": "https://github.com/itw-creative-works/wonderful-fetch/issues"
   },
@@ -69,7 +74,7 @@
     "mime-types": "^3.0.2"
   },
   "devDependencies": {
-    "mocha": "^11.7.5",
-    "prepare-package": "^2.0.7"
+    "mocha": "^11.7.6",
+    "prepare-package": "^2.1.0"
   }
 }

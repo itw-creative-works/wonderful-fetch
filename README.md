@@ -9,7 +9,6 @@
   <br>
   <img src="https://img.shields.io/librariesio/release/npm/wonderful-fetch.svg">
   <img src="https://img.shields.io/bundlephobia/min/wonderful-fetch.svg">
-  <img src="https://img.shields.io/codeclimate/maintainability-percentage/itw-creative-works/wonderful-fetch.svg">
   <img src="https://img.shields.io/npm/dm/wonderful-fetch.svg">
   <img src="https://img.shields.io/node/v/wonderful-fetch.svg">
   <img src="https://img.shields.io/website/https/itwcreativeworks.com.svg">

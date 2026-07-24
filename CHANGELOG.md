@@ -15,6 +15,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `Security` in case of vulnerabilities.
 
 ---
+## [Unreleased]
+### Added
+- Declared publish intent explicitly with `private: false` and `publishConfig.access`.
+
+### Changed
+- Updated `mocha` to 11.7.6 and `prepare-package` to 2.1.0.
+
+### Removed
+- Removed the Code Climate badge and `.codeclimate.yml`. The service is retired and the badge rendered as "retired badge".
+
+---
 ## [2.0.5] - 2026-04-07
 ### Fixed
 - Use `globalThis.fetch` instead of bare `fetch` to prevent variable shadowing bugs
