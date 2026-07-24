@@ -15,7 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `Security` in case of vulnerabilities.
 
 ---
-## [Unreleased]
+## [2.0.6] - 2026-07-24
 ### Added
 - Declared publish intent explicitly with `private: false` and `publishConfig.access`.
 
